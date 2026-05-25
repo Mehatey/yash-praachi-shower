@@ -280,43 +280,48 @@
   .subject-text .hand-note{ font-family:var(--hand); font-size:32px; color:var(--gold-deep); line-height:1.15; margin-top: 6px; }
   .subject-text .hand-note em{ font-style:normal; color:var(--rust); }
 
-  /* SCRAPBOOK pages (quirks, together) */
-  .scrap{ position:absolute; inset:0; padding:90px 80px 60px; display:grid; grid-template-columns: 1.05fr 1fr; gap: 60px; align-items:center; }
-  .scrap .left{ display:flex; flex-direction:column; gap:18px; max-width:600px; }
-  .scrap .left .chapter-mark{ font-family:var(--hand); font-size:26px; color:var(--gold-deep); }
-  .scrap .left h2{ font-family:var(--serif); font-weight:400; font-size:64px; line-height:1.05; letter-spacing:-0.02em; margin:0; }
-  .scrap .left h2 em{ font-style:italic; color:var(--rust); }
-  .scrap .left .blurb{ font-family:var(--body-serif); font-size:20px; line-height:1.55; color:var(--ink); max-width:560px; }
-  .scrap .left .blurb em{ font-style:italic; color:var(--rust); }
-  .scrap .left .quote{ font-family:var(--hand); font-size:34px; color:var(--gold-deep); line-height:1.1; margin-top: 12px; }
-  .scrap .left .stat-grid{ display:grid; grid-template-columns: auto 1fr; gap: 6px 18px; margin-top: 16px; max-width:560px; }
-  .scrap .left .stat-grid .k{ font-family:var(--sans); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-dim); padding-top:6px; }
-  .scrap .left .stat-grid .v{ font-family:var(--body-serif); font-size:18px; color:var(--ink); padding:4px 0; border-bottom:1px dashed var(--line); }
-  .scrap .left .stat-grid .v em{ font-style:italic; color:var(--rust); }
-  .scrap .right{ position:relative; height: 75vh; }
-  .scrap .right .pp{
-    position:absolute; background:#f8ecd8; padding:12px 12px 40px; box-shadow: var(--shadow);
+  /* SCRAPBOOK pages — FULL-BLEED photo composition */
+  .scrap{ position:absolute; inset:0; padding:0; }
+  /* tiny floating overlays — top-left chapter, bottom-right headline */
+  .scrap .overlay-top{
+    position:absolute; top:60px; left:60px; z-index:10; max-width:520px;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .scrap .overlay-top .mark{ font-family:var(--hand); font-size:26px; color:var(--gold); text-shadow: 0 0 14px rgba(245,184,66,0.5); }
+  .scrap .overlay-bottom{
+    position:absolute; bottom:60px; right:60px; z-index:10; max-width:580px; text-align:right;
+  }
+  .scrap .overlay-bottom h2{
+    font-family:var(--serif); font-weight:400; font-size:54px; line-height:1.0; letter-spacing:-0.02em; margin:0;
+    color: var(--ink); text-shadow: 0 4px 24px rgba(0,0,0,0.7);
+  }
+  .scrap .overlay-bottom h2 em{ font-style:italic; color:var(--rust); text-shadow: 0 4px 24px rgba(0,0,0,0.7), 0 0 24px rgba(255,122,110,0.4); }
+  .scrap .photos{ position:absolute; inset:0; }
+  .scrap .photos .pp{
+    position:absolute; background:#f8ecd8; padding:14px 14px 42px; box-shadow: var(--shadow);
     opacity:0; animation: drop 0.9s ease forwards;
   }
-  .scrap .right .pp .img{ width:100%; height:100%; background-size:cover; background-position:center; filter: saturate(0.92) contrast(1.02) sepia(0.06); }
-  .scrap .right .pp .cap{
+  .scrap .photos .pp .img{ width:100%; height:100%; background-size:cover; background-position:center; filter: saturate(0.92) contrast(1.04) sepia(0.05); }
+  .scrap .photos .pp .img.kb{ animation: kenburns-card 12s ease-in-out infinite alternate; }
+  @keyframes kenburns-card{ 0%{ transform: scale(1.02); } 100%{ transform: scale(1.14); } }
+  .scrap .photos .pp .cap{
     position:absolute; left:0; right:0; bottom:10px; text-align:center;
-    font-family:var(--hand); font-size:18px; color:var(--card-ink-soft); line-height:1;
+    font-family:var(--hand); font-size:19px; color:var(--card-ink-soft); line-height:1;
   }
-  .scrap .right .pp .tape{
+  .scrap .photos .pp .tape{
     position:absolute; top:-10px; left:50%; transform: translateX(-50%) rotate(-3deg);
-    width:60px; height:18px; background: rgba(212,167,62,0.45); border:1px solid rgba(212,167,62,0.20);
+    width:80px; height:22px; background: rgba(245,184,66,0.55); border:1px solid rgba(245,184,66,0.3);
   }
   @keyframes drop{
-    0%{ opacity:0; transform: translateY(-80px) rotate(calc(var(--rot, 0deg) - 12deg)) scale(0.85); }
-    60%{ opacity:1; transform: translateY(8px) rotate(calc(var(--rot, 0deg) + 1deg)) scale(1.02); }
+    0%{ opacity:0; transform: translateY(-100px) rotate(calc(var(--rot, 0deg) - 14deg)) scale(0.8); }
+    60%{ opacity:1; transform: translateY(10px) rotate(calc(var(--rot, 0deg) + 1.5deg)) scale(1.03); }
     100%{ opacity:1; transform: translateY(0) rotate(var(--rot, 0deg)) scale(1); }
   }
-  /* 4-photo composition */
-  .scrap .right .pp:nth-child(1){ width:60%; aspect-ratio: 3/4; top: 0; left: 5%; --rot: -3deg; animation-delay: .2s; z-index:2; }
-  .scrap .right .pp:nth-child(2){ width:50%; aspect-ratio: 4/3; top: 8%; right: 0; --rot: 4deg; animation-delay: .5s; z-index:1; }
-  .scrap .right .pp:nth-child(3){ width:48%; aspect-ratio: 1; bottom: 6%; left: 0; --rot: 2deg; animation-delay: .8s; z-index:3; }
-  .scrap .right .pp:nth-child(4){ width:54%; aspect-ratio: 4/5; bottom: 0; right: 6%; --rot: -2deg; animation-delay: 1.1s; z-index:1; }
+  /* magazine-spread, full-bleed 4-photo composition */
+  .scrap .photos .pp:nth-child(1){ width:42%; aspect-ratio: 3/4; top: 6%; left: 4%; --rot: -3deg; animation-delay: .15s; z-index:3; }
+  .scrap .photos .pp:nth-child(2){ width:36%; aspect-ratio: 4/3; top: 4%; right: 5%; --rot: 4deg; animation-delay: .45s; z-index:2; }
+  .scrap .photos .pp:nth-child(3){ width:38%; aspect-ratio: 1; bottom: 5%; left: 8%; --rot: 2.5deg; animation-delay: .75s; z-index:4; }
+  .scrap .photos .pp:nth-child(4){ width:40%; aspect-ratio: 4/5; bottom: 4%; right: 4%; --rot: -2deg; animation-delay: 1.05s; z-index:1; }
 
   /* FORESHADOW */
   .foreshadow{ position:relative; width:100%; height:100%; }
@@ -595,6 +600,58 @@
   }
   .toast.show{ opacity:1; }
 
+  /* MEGA MONTAGE */
+  .montage{ position:absolute; inset:0; background: #0c0604; }
+  .montage-stage{ position:absolute; inset:0; overflow:hidden; }
+  .montage-layer{
+    position:absolute; inset:0; background-size:cover; background-position:center; background-repeat:no-repeat;
+    opacity:0; transition: opacity 1.2s ease;
+    transform-origin: center;
+  }
+  .montage-layer.active{ opacity:1; animation: montage-kb 4.5s ease-out forwards; }
+  @keyframes montage-kb{
+    0%{ transform: scale(1.05) translate(0,0); }
+    100%{ transform: scale(1.18) translate(-1%, -1%); }
+  }
+  .montage-video{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000;
+    opacity:0; transition: opacity 0.8s ease; z-index:2;
+  }
+  .montage-video.active{ opacity:1; }
+  .montage::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
+    background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 25%, transparent 70%, rgba(0,0,0,0.65) 100%);
+  }
+  .montage-overlay{
+    position:absolute; left:60px; bottom:80px; z-index:5; max-width:780px; pointer-events:none;
+  }
+  .m-act-mark{
+    font-family:var(--hand); font-size:30px; color:var(--gold);
+    text-shadow: 0 0 16px rgba(245,184,66,0.55), 0 2px 8px rgba(0,0,0,0.8);
+    opacity:0; transition: opacity 1s ease;
+  }
+  .m-act-title{
+    font-family:var(--serif); font-weight:400; font-size:82px; line-height:1.0; letter-spacing:-0.025em;
+    color: var(--ink); margin-top: 6px;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.9);
+    opacity:0; transition: opacity 1.2s ease;
+  }
+  .m-act-title em{ font-style:italic; color: var(--rust); text-shadow: 0 4px 24px rgba(0,0,0,0.9), 0 0 32px rgba(255,122,110,0.4); }
+  .m-act-mark.show, .m-act-title.show{ opacity:1; }
+  .montage-progress{
+    position:absolute; left:60px; right:60px; bottom:42px; height:2px; background: rgba(255,243,224,0.10); z-index:5;
+  }
+  .montage-progress .bar{
+    height:100%; background: linear-gradient(90deg, var(--gold), var(--rust));
+    box-shadow: 0 0 12px rgba(245,184,66,0.6);
+    width:0%; transition: width 0.3s linear;
+  }
+  .montage-counter{
+    position:absolute; right:28px; top:52px; z-index:5;
+    font-family:var(--sans); font-size:11px; letter-spacing:.18em; color:var(--ink-dim); text-transform:uppercase;
+    background:rgba(36,20,16,0.85); padding:5px 10px; border-radius:99px; border:1px solid var(--line);
+  }
+
   /* LEADERBOARD */
   .results{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; text-align:center; }
   .leaderboard{ display:flex; flex-direction:column; gap:14px; min-width: 480px; max-width: 700px; }
@@ -774,12 +831,12 @@
       </div>
     </div>
 
-    <!-- INTRO (title card before yash) -->
+    <!-- INTRO (transition to games) -->
     <div id="scene-intro" class="scene">
       <div class="chapter-card">
-        <div class="num"><small>chapter one ·</small> meet the parents.</div>
-        <h1>two <em>people</em>.<br/>one tiny <em>person</em><br/>on the way.</h1>
-        <div class="hand" style="font-size:44px; color:var(--gold-deep);">but first — <span class="underline">a little background.</span></div>
+        <div class="ornament">✻ ✻ ✻</div>
+        <h1>before they <em>arrive,</em><br/>let's <em>play.</em></h1>
+        <div class="hand" style="font-size:44px; color:var(--gold); text-shadow: 0 0 16px rgba(245,184,66,0.45);">six rounds · phones in hand · the story comes after.</div>
         <div class="ornament">✻</div>
       </div>
     </div>
@@ -812,25 +869,17 @@
       </div>
     </div>
 
-    <!-- YASH QUIRKS (scrapbook) -->
+    <!-- YASH QUIRKS (full-bleed scrapbook) -->
     <div id="scene-yash_quirks" class="scene">
       <div class="scrap">
-        <div class="left">
-          <div class="chapter-mark">exhibit A · behaviors of a soon-to-be dad.</div>
-          <h2>he says <em>"fa fa"</em><br/>and it means <em>do faster.</em></h2>
-          <div class="blurb">
-            his catchphrase is also his time-management philosophy.
-            unfortunately, his time-management <em>itself</em> tells a different story.
-          </div>
-          <div class="quote">"yash, the flight already left."</div>
-          <div class="stat-grid" id="yash-quirks-lines"></div>
+        <div class="overlay-top"><div class="mark">exhibit A · yash, in his natural habitat.</div></div>
+        <div class="photos" id="yash-quirks-photos">
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">conquered a rock</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">tea fields · arms up</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">"attitude" (literally)</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">the dance moves</div></div>
         </div>
-        <div class="right" id="yash-quirks-photos">
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">conquered a rock</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">tea fields · arms up</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">"attitude" (literally)</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">the dance moves</div></div>
-        </div>
+        <div class="overlay-bottom"><h2>he says <em>"fa fa"</em><br/>and it means <em>do faster.</em></h2></div>
       </div>
     </div>
 
@@ -863,49 +912,31 @@
       </div>
     </div>
 
-    <!-- PRAACHI QUIRKS (scrapbook) -->
+    <!-- PRAACHI QUIRKS (full-bleed scrapbook) -->
     <div id="scene-praachi_quirks" class="scene">
       <div class="scrap">
-        <div class="left">
-          <div class="chapter-mark">exhibit B · inventory of a soon-to-be mom.</div>
-          <h2>21 outfits.<br/>for a <em>21-day trip.</em></h2>
-          <div class="blurb">
-            McKinsey "Next Gen Women Leader." 30 under 30 Emerging Women Achiever.
-            Co-founder of <em>BNI WIN</em> — women in business &amp; networking.
-            also: <em>two towers of accessories.</em> also: still waiting on the birkin.
-          </div>
-          <div class="quote">"you're not really going to wear pirates again, are you?"</div>
-          <div class="stat-grid" id="praachi-quirks-lines"></div>
+        <div class="overlay-top"><div class="mark">exhibit B · praachi, in her natural habitat.</div></div>
+        <div class="photos" id="praachi-quirks-photos">
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">little praachi · birthday</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">at the family bench</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">she does love a group pic</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">always with the aunties</div></div>
         </div>
-        <div class="right" id="praachi-quirks-photos">
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">little praachi · birthday</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">at the family bench</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">she does love a group pic</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">always with the aunties</div></div>
-        </div>
+        <div class="overlay-bottom"><h2>21 outfits.<br/>for a <em>21-day trip.</em></h2></div>
       </div>
     </div>
 
-    <!-- TOGETHER ORIGIN -->
+    <!-- TOGETHER ORIGIN (full-bleed scrapbook) -->
     <div id="scene-together_origin" class="scene">
       <div class="scrap">
-        <div class="left">
-          <div class="chapter-mark">chapter two · how they happened.</div>
-          <h2>introduced in <em>3 weeks.</em><br/>married in <em>3 weeks.</em></h2>
-          <div class="blurb">
-            mom played matchmaker. it took less time to plan their wedding
-            than it does to pick a paint color. <em>"flowering together,"</em>
-            the family decided. and they were right.
-          </div>
-          <div class="quote">"they're already finishing each other's sentences. and snacks."</div>
-          <div class="stat-grid" id="together-origin-lines"></div>
+        <div class="overlay-top"><div class="mark">chapter two · how they happened.</div></div>
+        <div class="photos" id="together-origin-photos">
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">hampi · together</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">a tender moment</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">a sunset</div></div>
+          <div class="pp"><div class="img kb"></div><div class="tape"></div><div class="cap">the squad</div></div>
         </div>
-        <div class="right" id="together-origin-photos">
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">hampi · together</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">a tender moment</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">a sunset</div></div>
-          <div class="pp"><div class="img"></div><div class="tape"></div><div class="cap">the squad</div></div>
-        </div>
+        <div class="overlay-bottom"><h2>introduced in <em>3 weeks.</em><br/>married in <em>3 weeks.</em></h2></div>
       </div>
     </div>
 
@@ -1067,6 +1098,23 @@
         <div class="sub" id="wishes-sub">they'll float onto this wall, signed by you.</div>
       </div>
       <div class="wishes-wrap" id="wishes-wrap"></div>
+    </div>
+
+    <!-- MEGA MONTAGE — the photo/video story (354 items) -->
+    <div id="scene-mega_montage" class="scene">
+      <div class="montage">
+        <div class="montage-stage" id="montage-stage">
+          <div class="montage-layer" id="m-layer-a"></div>
+          <div class="montage-layer" id="m-layer-b"></div>
+          <video class="montage-video" id="m-video" muted playsinline></video>
+        </div>
+        <div class="montage-overlay">
+          <div class="m-act-mark" id="m-act-mark"></div>
+          <div class="m-act-title" id="m-act-title"></div>
+        </div>
+        <div class="montage-progress"><div class="bar" id="m-progress-bar"></div></div>
+        <div class="montage-counter" id="m-counter">0 / 0</div>
+      </div>
     </div>
 
     <!-- RESOLVE -->
@@ -1282,6 +1330,19 @@ const CAPTION_PROMPT = "give this picture the caption it deserves.";
 const CAPTION_PHOTO = M("yash-foreshadow-mural.jpg");
 const BABY_PHOTOS = { A: M("yash-sleeping-light.JPG"), B: M("praachi-baby-grandma.jpg") };
 
+// Mega montage media — loaded from manifest at startup
+let ALL_MEDIA = { praachi: [], general: [], videos: [] };
+let MONTAGE_SEQUENCE = []; // flat array {type:"img"|"video", src, act}
+const MONTAGE_ACTS = [
+  { mark: "act one", title: "<em>once</em> upon a time…" },
+  { mark: "act two", title: "two kids, growing up." },
+  { mark: "act three", title: "and somewhere, <em>they crossed paths.</em>" },
+  { mark: "act four", title: "the family they built." },
+  { mark: "act five", title: "the family they're <em>about</em> to become." },
+];
+const PHOTO_DURATION = 2400; // ms per photo
+const ACT_TITLE_HOLD = 4500; // how long each act title shows
+
 const TIMING = {
   boot: 6000,
   intro: 6000,
@@ -1327,10 +1388,6 @@ let musicNodes = [];
 
 const PHASE_ORDER = [
   "boot","join","intro",
-  "yash_open","yash_quirks",
-  "praachi_open","praachi_quirks",
-  "together_origin","together_life",
-  "foreshadow","games_intro",
   "baby_vote","baby_reveal",
   "trait_0_vote","trait_0_reveal","trait_1_vote","trait_1_reveal",
   "trait_2_vote","trait_2_reveal","trait_3_vote","trait_3_reveal","trait_4_vote","trait_4_reveal",
@@ -1340,7 +1397,9 @@ const PHASE_ORDER = [
   "caption_write","caption_vote","caption_reveal",
   "pred_0_vote","pred_0_reveal","pred_1_vote","pred_1_reveal",
   "pred_2_vote","pred_2_reveal","pred_3_vote","pred_3_reveal",
-  "ai_baby","wishes_write","wishes_show",
+  "ai_baby",
+  "wishes_write","wishes_show",
+  "mega_montage",
   "resolve","credits"
 ];
 
@@ -1533,6 +1592,7 @@ function startHost(){
   setBody("host");
   show($("#tv"));
   spawnPetals();
+  loadMontageManifest();
 
   const phoneUrl = window.location.origin + window.location.pathname + "?phone";
   $("#qr-img").src = `https://api.qrserver.com/v1/create-qr-code/?size=460x460&margin=0&qzone=1&data=${encodeURIComponent(phoneUrl)}&color=2a1a10&bgcolor=fff8ec`;
@@ -1639,6 +1699,7 @@ function applyPhase(s){
   if (p === "ai_baby"){ phaseAiBaby(); return; }
   if (p === "wishes_write"){ phaseWishesWrite(); return; }
   if (p === "wishes_show"){ phaseWishesShow(); return; }
+  if (p === "mega_montage"){ phaseMegaMontage(); return; }
   if (p === "resolve"){ phaseResolve(); return; }
   if (p === "credits"){ phaseCredits(); return; }
 }
@@ -1722,8 +1783,8 @@ function phaseJoin(){
 }
 function phaseIntro(){
   showScene("intro");
-  $("#footer-left").textContent = "chapter one";
-  armTimer(TIMING.intro, ()=> setState({phase:"yash_open"}));
+  $("#footer-left").textContent = "let's play";
+  armTimer(TIMING.intro, ()=> setState({phase:"baby_vote"}));
 }
 function phaseYashOpen(){
   showScene("yash_open");
@@ -1963,7 +2024,7 @@ function phaseWishesShow(){
   $("#footer-left").textContent = "wishes incoming";
   $("#wishes-sub").innerHTML = "look <em>up.</em>";
   renderWishes();
-  armTimer(TIMING.wish_show, ()=> setState({phase:"resolve"}));
+  armTimer(TIMING.wish_show, ()=> setState({phase:"mega_montage"}));
 }
 function phaseResolve(){
   showScene("resolve");
@@ -1974,6 +2035,152 @@ function phaseResolve(){
   });
   setTimeout(sfxReveal, 600);
   armTimer(TIMING.resolve, ()=> setState({phase:"credits"}));
+}
+
+// ====================== MEGA MONTAGE ======================
+
+async function loadMontageManifest(){
+  try{
+    const res = await fetch("./media-manifest.json");
+    ALL_MEDIA = await res.json();
+    buildMontageSequence();
+    console.log("manifest loaded:", ALL_MEDIA.praachi.length + ALL_MEDIA.general.length + ALL_MEDIA.videos.length, "items");
+  } catch(e){
+    console.warn("manifest fetch failed", e);
+  }
+}
+
+function shuffle(arr){ const a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function buildMontageSequence(){
+  // Split into 5 acts with photos interleaved + videos sprinkled
+  const all = [];
+  const allImages = [
+    ...ALL_MEDIA.praachi.map(f => ({type:"img", src: M(f)})),
+    ...ALL_MEDIA.general.map(f => ({type:"img", src: M(f)})),
+  ];
+  const allVideos = ALL_MEDIA.videos.map(f => ({type:"video", src: M(f)}));
+  // Shuffle within each pool then interleave videos sparsely
+  const shuffled = shuffle(allImages);
+  const videos = shuffle(allVideos);
+  // Distribute across 5 acts
+  const perAct = Math.ceil(shuffled.length / MONTAGE_ACTS.length);
+  const videosPerAct = Math.ceil(videos.length / MONTAGE_ACTS.length);
+  let vIdx = 0;
+  for (let actIdx = 0; actIdx < MONTAGE_ACTS.length; actIdx++){
+    // act marker (used for overlay updates)
+    all.push({type:"act", act: actIdx});
+    const slice = shuffled.slice(actIdx * perAct, (actIdx + 1) * perAct);
+    const vSlice = videos.slice(vIdx, vIdx + videosPerAct);
+    vIdx += videosPerAct;
+    // interleave: 1 video per ~8 images
+    let videoCounter = 0;
+    slice.forEach((item, i) => {
+      all.push({...item, act: actIdx});
+      if (i > 0 && i % 8 === 0 && videoCounter < vSlice.length){
+        all.push({...vSlice[videoCounter++], act: actIdx});
+      }
+    });
+    // remaining videos for this act
+    while (videoCounter < vSlice.length){
+      all.push({...vSlice[videoCounter++], act: actIdx});
+    }
+  }
+  MONTAGE_SEQUENCE = all;
+}
+
+let montageState = {
+  index: 0,
+  layerToggle: false, // false=A, true=B
+  itemTimer: null,
+  videoEndedFn: null,
+};
+
+function phaseMegaMontage(){
+  showScene("mega_montage");
+  $("#footer-left").textContent = "the story · all of it";
+  $("#m-act-mark").classList.remove("show");
+  $("#m-act-title").classList.remove("show");
+  // reset
+  montageState.index = 0;
+  montageState.layerToggle = false;
+  if (montageState.itemTimer){ clearTimeout(montageState.itemTimer); }
+  const vid = $("#m-video"); vid.pause(); vid.classList.remove("active"); vid.removeAttribute("src");
+  if (MONTAGE_SEQUENCE.length === 0){
+    // Manifest not loaded yet — try again shortly
+    setTimeout(()=> phaseMegaMontage(), 800);
+    return;
+  }
+  playNextMontageItem();
+  // safety advance after very long max
+  armTimer(900000, ()=> setState({phase:"resolve"})); // 15min max
+}
+
+function playNextMontageItem(){
+  if (!currentState || currentState.phase !== "mega_montage") return;
+  if (montageState.index >= MONTAGE_SEQUENCE.length){
+    // done — advance to resolve
+    setState({phase:"resolve"});
+    return;
+  }
+  const item = MONTAGE_SEQUENCE[montageState.index++];
+  // update counter + progress
+  const total = MONTAGE_SEQUENCE.filter(x => x.type !== "act").length;
+  const shown = MONTAGE_SEQUENCE.slice(0, montageState.index).filter(x => x.type !== "act").length;
+  $("#m-counter").textContent = shown + " / " + total;
+  $("#m-progress-bar").style.width = (100 * shown / total) + "%";
+
+  if (item.type === "act"){
+    // Update act overlay
+    const act = MONTAGE_ACTS[item.act];
+    const mark = $("#m-act-mark");
+    const title = $("#m-act-title");
+    mark.classList.remove("show"); title.classList.remove("show");
+    setTimeout(()=>{
+      mark.textContent = act.mark;
+      title.innerHTML = act.title;
+      mark.classList.add("show");
+      title.classList.add("show");
+      setTimeout(()=>{
+        mark.classList.remove("show");
+        title.classList.remove("show");
+      }, ACT_TITLE_HOLD);
+    }, 300);
+    // proceed immediately to next item
+    montageState.itemTimer = setTimeout(playNextMontageItem, 100);
+    return;
+  }
+  if (item.type === "img"){
+    // Cross-fade between layer A and B
+    const aId = montageState.layerToggle ? "#m-layer-a" : "#m-layer-b";
+    const bId = montageState.layerToggle ? "#m-layer-b" : "#m-layer-a";
+    const incoming = $(aId); const outgoing = $(bId);
+    incoming.style.backgroundImage = `url('${item.src}')`;
+    incoming.style.animation = "none"; void incoming.offsetWidth; incoming.style.animation = "";
+    incoming.classList.add("active");
+    outgoing.classList.remove("active");
+    montageState.layerToggle = !montageState.layerToggle;
+    // Hide video if it was showing
+    const vid = $("#m-video"); vid.pause(); vid.classList.remove("active");
+    montageState.itemTimer = setTimeout(playNextMontageItem, PHOTO_DURATION);
+    return;
+  }
+  if (item.type === "video"){
+    const vid = $("#m-video");
+    // remove previous ended listener
+    if (montageState.videoEndedFn){ vid.removeEventListener("ended", montageState.videoEndedFn); }
+    vid.src = item.src;
+    vid.classList.add("active");
+    vid.play().catch(()=>{});
+    montageState.videoEndedFn = () => playNextMontageItem();
+    vid.addEventListener("ended", montageState.videoEndedFn, { once: true });
+    // safety timeout — if video doesn't end in 25s, move on
+    montageState.itemTimer = setTimeout(()=>{
+      vid.removeEventListener("ended", montageState.videoEndedFn);
+      playNextMontageItem();
+    }, 25000);
+    return;
+  }
 }
 function phaseCredits(){
   showScene("credits");
@@ -2154,9 +2361,8 @@ function renderPhone(force){
   const s = currentState || {phase:"boot"};
 
   const idlePhases = new Set([
-    "boot","intro","yash_open","yash_quirks","praachi_open","praachi_quirks",
-    "together_origin","together_life","foreshadow","games_intro",
-    "baby_reveal","trivia_results","ai_baby","wishes_show","resolve","credits"
+    "boot","intro",
+    "baby_reveal","trivia_results","ai_baby","wishes_show","mega_montage","resolve","credits"
   ]);
   if (s.phase === "join"){
     if (key !== lastPhoneKey || force){
@@ -2187,6 +2393,7 @@ function renderPhone(force){
         baby_reveal: [`look up for the <em>reveal.</em>`, ""],
         trivia_results: [`who knew them <em>best?</em>`, "scoreboard on the tv"],
         ai_baby: [`we generated the <em>baby.</em>`, "with AI · obviously"],
+        mega_montage: [`a little <em>story.</em>`, "look up — every photo, every video"],
         wishes_show: [`your wishes are on the <em>wall.</em>`, "look up"],
         resolve: [`that's the <em>show.</em>`, ""],
         credits: [`thanks for playing, <em>${me}.</em>`, "congrats yash & praachi"],
