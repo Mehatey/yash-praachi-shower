@@ -595,6 +595,72 @@
   }
   .toast.show{ opacity:1; }
 
+  /* LEADERBOARD */
+  .results{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; text-align:center; }
+  .leaderboard{ display:flex; flex-direction:column; gap:14px; min-width: 480px; max-width: 700px; }
+  .leaderboard .row{
+    display:grid; grid-template-columns: 60px 1fr auto; gap:24px; align-items:center;
+    padding: 18px 28px; background:#f8ecd8; box-shadow: var(--shadow-soft);
+    color: var(--card-ink);
+    opacity:0; animation: stagger-in 0.6s ease forwards;
+    border-left: 4px solid var(--ink-faint);
+  }
+  .leaderboard .row.first{ border-left-color: var(--gold); box-shadow: 0 0 0 3px var(--gold), var(--shadow-soft); }
+  .leaderboard .row.second{ border-left-color: var(--rust); }
+  .leaderboard .row.third{ border-left-color: var(--sage); }
+  .leaderboard .row .rank{ font-family:var(--serif); font-style:italic; font-size:36px; color:var(--card-ink-soft); }
+  .leaderboard .row .name{ font-family:var(--serif); font-size:30px; text-align:left; color:var(--card-ink); }
+  .leaderboard .row .score{ font-family:var(--hand); font-size:32px; color:var(--rust); }
+  .leaderboard .row.first .rank{ color: var(--gold-deep); }
+  .leaderboard .row.first .score{ color: var(--rust-deep); text-shadow: 0 0 14px rgba(255,122,110,0.5); }
+  .leaderboard .row:nth-child(1){ animation-delay: 0.2s; }
+  .leaderboard .row:nth-child(2){ animation-delay: 0.5s; }
+  .leaderboard .row:nth-child(3){ animation-delay: 0.8s; }
+  .leaderboard .row:nth-child(4){ animation-delay: 1.1s; }
+  .leaderboard .row:nth-child(5){ animation-delay: 1.4s; }
+  .leaderboard .empty{ font-family:var(--serif); font-style:italic; font-size:24px; color:var(--ink-dim); }
+
+  /* LIVE EMOJI RAIN (TV) */
+  .emoji-rain{ position:absolute; inset:0; pointer-events:none; z-index:40; overflow:hidden; }
+  .emoji-pop{
+    position:absolute; bottom:-60px; font-size:42px; opacity:0;
+    animation: emoji-float 3.5s cubic-bezier(0.2,0.6,0.3,1) forwards;
+    filter: drop-shadow(0 0 12px rgba(245,184,66,0.5));
+    will-change: transform, opacity;
+  }
+  @keyframes emoji-float{
+    0%{ transform: translateY(0) scale(0.4) rotate(0deg); opacity:0; }
+    8%{ opacity:1; transform: translateY(-40px) scale(1.1) rotate(-5deg); }
+    50%{ transform: translateY(-50vh) scale(1) rotate(8deg); opacity:1; }
+    100%{ transform: translateY(-105vh) scale(0.85) rotate(-3deg); opacity:0; }
+  }
+
+  /* LIVE NAME TICKER — pops "name reacted" below ticker */
+  .live-ticker{ position:absolute; right:24px; top:80px; z-index:41; display:flex; flex-direction:column; gap:6px; pointer-events:none; align-items:flex-end; }
+  .live-tick{
+    background: rgba(36,20,16,0.85); border:1px solid rgba(245,184,66,0.3); border-radius:99px;
+    padding:6px 14px; font-family:var(--serif); font-style:italic; font-size:15px; color:var(--gold);
+    backdrop-filter: blur(8px); white-space:nowrap;
+    opacity:0; transform: translateX(20px);
+    animation: tick-in 0.4s ease forwards, tick-out 0.4s ease 3.5s forwards;
+    text-shadow: 0 0 8px rgba(245,184,66,0.4);
+  }
+  .live-tick .emoji{ margin-right:6px; }
+  @keyframes tick-in{ to{ opacity:1; transform: translateX(0); } }
+  @keyframes tick-out{ to{ opacity:0; transform: translateX(-8px); } }
+
+  /* PHONE reactions panel — always visible above status */
+  .phone-reactions{
+    display:grid; grid-template-columns: repeat(5, 1fr); gap:8px;
+    padding: 14px 0 8px; border-top:1px solid var(--line);
+  }
+  .phone-reactions .react-btn{
+    background:#f8ecd8; border:1px solid var(--line-2); padding:14px 0;
+    font-size:28px; line-height:1; transition: transform .08s ease, background .15s ease;
+    color:var(--card-ink);
+  }
+  .phone-reactions .react-btn:active{ transform: scale(0.88); background: var(--gold); }
+
   .hidden{ display:none !important; }
 
   @media (max-width: 720px){
@@ -666,6 +732,8 @@
 
   <div class="tv-main">
     <div class="petals" id="petals"></div>
+    <div class="emoji-rain" id="emoji-rain"></div>
+    <div class="live-ticker" id="live-ticker"></div>
 
     <!-- BOOT (title) -->
     <div id="scene-boot" class="scene">
@@ -935,6 +1003,16 @@
       </div>
     </div>
 
+    <!-- TRIVIA RESULTS (scoreboard) -->
+    <div id="scene-trivia_results" class="scene">
+      <div class="results">
+        <div class="ornament">✻ ✻ ✻</div>
+        <div class="mark" style="font-family:var(--hand); font-size:30px; color:var(--gold); margin-bottom: 4px;">round three · results.</div>
+        <h2 class="display sage" style="font-size:88px; margin: 8px 0 30px;">who knows them <em>best?</em></h2>
+        <div class="leaderboard" id="leaderboard"></div>
+      </div>
+    </div>
+
     <!-- CAPTION (game 4) -->
     <div id="scene-caption" class="scene">
       <div class="caption-wrap">
@@ -1045,6 +1123,13 @@
     <div class="me" id="me-name">—</div>
   </div>
   <div class="phone-body" id="phone-body"></div>
+  <div class="phone-reactions" id="phone-reactions" style="display:none;">
+    <button class="react-btn" data-emoji="❤️">❤️</button>
+    <button class="react-btn" data-emoji="😂">😂</button>
+    <button class="react-btn" data-emoji="🎉">🎉</button>
+    <button class="react-btn" data-emoji="🌸">🌸</button>
+    <button class="react-btn" data-emoji="🥳">🥳</button>
+  </div>
   <div class="phone-status" id="phone-status">— connecting</div>
 </div>
 
@@ -1052,7 +1137,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, onValue, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, onValue, onDisconnect, remove, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 // ====================== CONFIG ======================
 
@@ -1251,6 +1336,7 @@ const PHASE_ORDER = [
   "trait_2_vote","trait_2_reveal","trait_3_vote","trait_3_reveal","trait_4_vote","trait_4_reveal",
   "trivia_0_vote","trivia_0_reveal","trivia_1_vote","trivia_1_reveal",
   "trivia_2_vote","trivia_2_reveal","trivia_3_vote","trivia_3_reveal","trivia_4_vote","trivia_4_reveal",
+  "trivia_results",
   "caption_write","caption_vote","caption_reveal",
   "pred_0_vote","pred_0_reveal","pred_1_vote","pred_1_reveal",
   "pred_2_vote","pred_2_reveal","pred_3_vote","pred_3_reveal",
@@ -1474,10 +1560,55 @@ function startHost(){
     currentState = v;
     if (!same) applyPhase(v);
   });
+  // Listen for emoji reactions and float them up
+  onValue(r("reactions"), s => {
+    const data = s.val() || {};
+    Object.entries(data).forEach(([k, v]) => {
+      if (seenReactions.has(k)) return;
+      seenReactions.add(k);
+      // Don't replay old reactions on initial subscribe
+      const ts = parseInt(k.split("_")[0], 10);
+      if (Date.now() - ts > 8000) return;
+      floatEmoji(v.emoji, v.name);
+    });
+  });
 
   $("#baby-A-img").src = BABY_PHOTOS.A;
   $("#baby-B-img").src = BABY_PHOTOS.B;
   $("#caption-img").src = CAPTION_PHOTO;
+
+  // Periodic cleanup of old reactions in DB so it doesn't grow forever
+  setInterval(()=>{
+    // Only host does cleanup
+    get(r("reactions")).then(snap => {
+      const data = snap.val() || {};
+      Object.keys(data).forEach(k => {
+        const ts = parseInt(k.split("_")[0], 10);
+        if (Date.now() - ts > 15000) remove(r(`reactions/${k}`));
+      });
+    }).catch(()=>{});
+  }, 12000);
+}
+const seenReactions = new Set();
+function floatEmoji(emoji, name){
+  const rain = $("#emoji-rain"); if (!rain) return;
+  const el = document.createElement("div");
+  el.className = "emoji-pop";
+  el.textContent = emoji;
+  el.style.left = (5 + Math.random()*85) + "%";
+  el.style.fontSize = (32 + Math.random()*24) + "px";
+  el.style.animationDuration = (3.0 + Math.random()*1.5) + "s";
+  rain.appendChild(el);
+  setTimeout(()=> el.remove(), 5000);
+  // Also show name tick top-right
+  if (name){
+    const ticker = $("#live-ticker"); if (!ticker) return;
+    const tick = document.createElement("div");
+    tick.className = "live-tick";
+    tick.innerHTML = `<span class="emoji">${emoji}</span>${escapeHTML(name)}`;
+    ticker.appendChild(tick);
+    setTimeout(()=> tick.remove(), 4500);
+  }
 }
 
 function setState(patch){ return set(r("state"), { ...patch, startedAt: Date.now() }); }
@@ -1499,6 +1630,7 @@ function applyPhase(s){
   if (p === "baby_vote"){ phaseBabyVote(); return; }
   if (p === "baby_reveal"){ phaseBabyReveal(); return; }
   if (p.startsWith("trait_")){ phaseTrait(p); return; }
+  if (p === "trivia_results"){ phaseTriviaResults(); return; }
   if (p.startsWith("trivia_")){ phaseTrivia(p); return; }
   if (p === "caption_write"){ phaseCaptionWrite(); return; }
   if (p === "caption_vote"){ phaseCaptionVote(); return; }
@@ -1723,8 +1855,42 @@ function phaseTrivia(phase){
     $$("#trivia-options .pred-opt").forEach(el => {
       if (+el.dataset.idx === t.correct) el.classList.add("correct");
     });
-    armTimer(TIMING.trivia_reveal, ()=> setState({phase: q+1 < TRIVIA.length ? `trivia_${q+1}_vote` : "caption_write"}));
+    armTimer(TIMING.trivia_reveal, ()=> setState({phase: q+1 < TRIVIA.length ? `trivia_${q+1}_vote` : "trivia_results"}));
   }
+}
+function phaseTriviaResults(){
+  showScene("trivia_results");
+  $("#footer-left").textContent = "round 3 · scoreboard";
+  sfxReveal();
+  // Compute scores per player
+  const scores = {}; // {pid: correctCount}
+  TRIVIA.forEach((t, i) => {
+    const v = (votesByPhase[`trivia_${i}`]) || {};
+    Object.entries(v).forEach(([pid, choice]) => {
+      if (+choice === t.correct){ scores[pid] = (scores[pid] || 0) + 1; }
+    });
+  });
+  // Sort
+  const ranked = Object.entries(scores)
+    .map(([pid, s]) => ({pid, name: playerName(pid), score: s}))
+    .filter(r => r.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+  const lb = $("#leaderboard");
+  if (ranked.length === 0){
+    lb.innerHTML = `<div class="empty">no one got any right.<br/><span style="font-family:var(--hand); color:var(--rust); font-size:30px;">that's actually impressive.</span></div>`;
+  } else {
+    const medals = ["🥇","🥈","🥉","4","5"];
+    lb.innerHTML = ranked.map((r, i) => {
+      const cls = i===0?"first":i===1?"second":i===2?"third":"";
+      return `<div class="row ${cls}">
+        <div class="rank">${medals[i]}</div>
+        <div class="name">${escapeHTML(r.name)}</div>
+        <div class="score">${r.score} / ${TRIVIA.length}</div>
+      </div>`;
+    }).join("");
+  }
+  armTimer(12000, ()=> setState({phase:"caption_write"}));
 }
 function phaseCaptionWrite(){
   showScene("caption");
@@ -1965,6 +2131,19 @@ function mountPhone(){
   onValue(r("captions"), s => { captions = s.val() || {}; renderPhone(false); });
   onValue(r("captionVotes"), s => { captionVotes = s.val() || {}; renderPhone(false); });
   onValue(r("wishes"), s => { wishes = s.val() || {}; });
+  // wire up emoji reaction buttons (always visible)
+  const panel = $("#phone-reactions");
+  panel.style.display = "grid";
+  panel.addEventListener("click", e => {
+    const btn = e.target.closest(".react-btn"); if (!btn) return;
+    const emoji = btn.dataset.emoji;
+    // push to firebase as a transient event (use timestamp as key)
+    const k = `${Date.now()}_${myId}`;
+    set(r(`reactions/${k}`), { emoji, name: myName });
+    // also light up the button briefly
+    btn.style.background = "var(--gold)";
+    setTimeout(()=>{ btn.style.background = ""; }, 250);
+  });
 }
 let lastPhoneKey = "";
 function phoneKey(){ const s = currentState||{}; return `${s.phase||"-"}`; }
@@ -1977,7 +2156,7 @@ function renderPhone(force){
   const idlePhases = new Set([
     "boot","intro","yash_open","yash_quirks","praachi_open","praachi_quirks",
     "together_origin","together_life","foreshadow","games_intro",
-    "baby_reveal","ai_baby","wishes_show","resolve","credits"
+    "baby_reveal","trivia_results","ai_baby","wishes_show","resolve","credits"
   ]);
   if (s.phase === "join"){
     if (key !== lastPhoneKey || force){
@@ -2006,6 +2185,7 @@ function renderPhone(force){
         foreshadow: [`watch the <em>tv.</em>`, "we found something from 2017"],
         games_intro: [`get <em>ready.</em>`, "your phone is the controller now"],
         baby_reveal: [`look up for the <em>reveal.</em>`, ""],
+        trivia_results: [`who knew them <em>best?</em>`, "scoreboard on the tv"],
         ai_baby: [`we generated the <em>baby.</em>`, "with AI · obviously"],
         wishes_show: [`your wishes are on the <em>wall.</em>`, "look up"],
         resolve: [`that's the <em>show.</em>`, ""],
