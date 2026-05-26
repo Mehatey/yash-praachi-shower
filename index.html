@@ -1710,7 +1710,12 @@ function armTimer(ms, cb){
 }
 function nextPhase(){ const i = PHASE_ORDER.indexOf(currentState ? currentState.phase : "boot"); if (i < 0 || i >= PHASE_ORDER.length-1) return null; return PHASE_ORDER[i+1]; }
 function prevPhase(){ const i = PHASE_ORDER.indexOf(currentState ? currentState.phase : "boot"); if (i <= 0) return null; return PHASE_ORDER[i-1]; }
-function hostAdvance(){ if (!currentState){ setState({phase:"join"}); return; } const n = nextPhase(); if (n) setState({phase:n}); }
+function hostAdvance(){
+  if (!currentState){ setState({phase:"join"}); return; }
+  const n = nextPhase();
+  if (n){ setState({phase:n}); }
+  else { setState({phase:"mega_montage"}); } // at end → loop to montage
+}
 function hostBack(){ const p = prevPhase(); if (p) setState({phase:p}); }
 
 // ====================== SCENE HELPERS ======================
