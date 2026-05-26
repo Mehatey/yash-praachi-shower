@@ -604,7 +604,7 @@
     opacity:0; transition: opacity 1.2s ease;
     transform-origin: center;
   }
-  .montage-layer.active{ opacity:1; animation: montage-kb 3.4s ease-out forwards; }
+  .montage-layer.active{ opacity:1; animation: montage-kb 5.5s ease-out forwards; }
   @keyframes montage-kb{
     0%{ transform: scale(1.08) translate(0,0); }
     100%{ transform: scale(1.22) translate(-1.5%, -1%); }
@@ -1326,8 +1326,8 @@ const MONTAGE_ACTS = [
   { mark: "act four", title: "the family they built." },
   { mark: "act five", title: "the family they're <em>about</em> to become." },
 ];
-const PHOTO_DURATION = 1700; // ms per photo — punchier, more video-feel
-const ACT_TITLE_HOLD = 3500;
+const PHOTO_DURATION = 2800; // ms per photo
+const ACT_TITLE_HOLD = 4500;
 
 const TIMING = {
   boot: 6000,
@@ -1711,10 +1711,18 @@ function armTimer(ms, cb){
 function nextPhase(){ const i = PHASE_ORDER.indexOf(currentState ? currentState.phase : "boot"); if (i < 0 || i >= PHASE_ORDER.length-1) return null; return PHASE_ORDER[i+1]; }
 function prevPhase(){ const i = PHASE_ORDER.indexOf(currentState ? currentState.phase : "boot"); if (i <= 0) return null; return PHASE_ORDER[i-1]; }
 function hostAdvance(){
-  if (!currentState){ setState({phase:"join"}); return; }
-  const n = nextPhase();
-  if (n){ setState({phase:n}); }
-  else { setState({phase:"mega_montage"}); } // at end → loop to montage
+  try {
+    const cur = (currentState && currentState.phase) || "boot";
+    console.log("[NEXT] current=", cur);
+    if (!currentState){ setState({phase:"join"}); console.log("[NEXT] → join (no state)"); return; }
+    const n = nextPhase();
+    if (n){ setState({phase:n}); console.log("[NEXT] →", n); }
+    else { setState({phase:"mega_montage"}); console.log("[NEXT] → mega_montage (loop)"); }
+  } catch(e){
+    console.error("[NEXT FAILED]", e);
+    // Hard fallback — force into mega_montage
+    setState({phase:"mega_montage"});
+  }
 }
 function hostBack(){ const p = prevPhase(); if (p) setState({phase:p}); }
 
