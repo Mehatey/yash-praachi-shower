@@ -596,57 +596,52 @@
   }
   .toast.show{ opacity:1; }
 
-  /* MEGA MONTAGE */
-  .montage{ position:absolute; inset:0; background: var(--paper); }
-  .montage-stage{ position:absolute; inset:0; overflow:hidden; }
-  .montage-layer{
-    position:absolute; inset:0; background-size:cover; background-position:center; background-repeat:no-repeat;
-    opacity:0; transition: opacity 1.2s ease;
-    transform-origin: center;
-  }
-  .montage-layer.active{ opacity:1; animation: montage-kb 5.5s ease-out forwards; }
-  @keyframes montage-kb{
-    0%{ transform: scale(1.08) translate(0,0); }
-    100%{ transform: scale(1.22) translate(-1.5%, -1%); }
-  }
-  .montage-video{
-    position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000;
-    opacity:0; transition: opacity 0.8s ease; z-index:2;
-  }
-  .montage-video.active{ opacity:1; }
+  /* MEGA MONTAGE — living collage */
+  .montage{ position:absolute; inset:0; overflow:hidden;
+    background: radial-gradient(ellipse at 50% 38%, #16161f 0%, #0b0b10 72%); }
+  .collage{ position:absolute; inset:0; }
   .montage::after{
-    content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
-    background: linear-gradient(180deg, rgba(45,27,10,0.3) 0%, transparent 25%, transparent 70%, rgba(45,27,10,0.35) 100%);
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:8000;
+    box-shadow: inset 0 0 260px rgba(0,0,0,0.6);
   }
-  .montage-overlay{
-    position:absolute; left:60px; bottom:80px; z-index:5; max-width:780px; pointer-events:none;
+  .col-card{
+    position:absolute; opacity:0; border-radius:12px; overflow:hidden;
+    box-shadow: 0 22px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07);
+    transition: opacity 1.1s ease, transform 1.1s cubic-bezier(.16,.84,.28,1);
+    will-change: transform, opacity;
   }
-  .m-act-mark{
-    font-family:var(--hand); font-size:30px; color:var(--gold);
-    text-shadow: 0 0 16px rgba(244,166,35,0.65), 0 2px 8px rgba(45,27,10,0.5);
-    opacity:0; transition: opacity 1s ease;
+  .col-card.show{ opacity:1; }
+  .col-card img, .col-card video{
+    width:100%; height:100%; object-fit:cover; display:block;
+    animation: col-kb 10s ease-out forwards;
   }
-  .m-act-title{
-    font-family:var(--serif); font-weight:400; font-size:82px; line-height:1.0; letter-spacing:-0.025em;
-    color: var(--ink); margin-top: 6px;
-    text-shadow: 0 4px 24px rgba(45,27,10,0.55);
-    opacity:0; transition: opacity 1.2s ease;
+  @keyframes col-kb{ from{ transform: scale(1.14); } to{ transform: scale(1.0); } }
+
+  /* host controls recede during the show, available on hover */
+  body.host .host-controls{ opacity:.14; transition: opacity .35s ease; }
+  body.host .host-controls:hover{ opacity:1; }
+
+  /* live text reactions */
+  .react-bubble{
+    position:absolute; bottom:-40px; z-index:50; pointer-events:none;
+    padding:9px 16px; border-radius:22px; background:rgba(18,18,26,0.8); backdrop-filter:blur(6px);
+    color:#fff; font-family:var(--hand); font-size:25px; line-height:1.1;
+    box-shadow:0 10px 34px rgba(0,0,0,0.45); max-width:42vw;
   }
-  .m-act-title em{ font-style:italic; color: var(--rust); text-shadow: 0 4px 24px rgba(45,27,10,0.55), 0 0 32px rgba(142,109,210,0.45); }
-  .m-act-mark.show, .m-act-title.show{ opacity:1; }
-  .montage-progress{
-    position:absolute; left:60px; right:60px; bottom:42px; height:2px; background: rgba(255,243,224,0.10); z-index:5;
+  .react-bubble .who{ display:block; font-family:var(--sans); font-size:11px; opacity:.6; margin-top:2px; letter-spacing:.08em; }
+  @keyframes react-fly{
+    0%{ opacity:0; transform: translateX(var(--fx,0)) translateY(0) scale(.85); }
+    12%{ opacity:1; }
+    100%{ opacity:0; transform: translateX(0) translateY(-72vh) scale(1); }
   }
-  .montage-progress .bar{
-    height:100%; background: linear-gradient(90deg, var(--gold), var(--rust));
-    box-shadow: 0 0 12px rgba(244,166,35,0.55);
-    width:0%; transition: width 0.3s linear;
-  }
-  .montage-counter{
-    position:absolute; right:28px; top:52px; z-index:5;
-    font-family:var(--sans); font-size:11px; letter-spacing:.18em; color:var(--ink-dim); text-transform:uppercase;
-    background:rgba(255,234,208,0.92); padding:5px 10px; border-radius:99px; border:1px solid var(--line);
-  }
+
+  /* phone reaction bar — emojis + custom text */
+  .react-text-row{ display:flex; gap:8px; margin-top:8px; }
+  .react-text{ flex:1; min-width:0; padding:12px 14px; border-radius:13px; border:1px solid var(--line-2);
+    font-family:var(--body-serif); font-size:18px; background:#fff; color:var(--card-ink); outline:none; }
+  .react-text:focus{ border-color:var(--rust); }
+  .react-text-send{ padding:0 18px; border-radius:13px; border:none; cursor:pointer;
+    background:var(--rust); color:#fff8ec; font-family:var(--serif); font-weight:500; font-size:14px; letter-spacing:.5px; }
 
   /* LEADERBOARD */
   .results{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; text-align:center; }
@@ -674,7 +669,7 @@
   .leaderboard .empty{ font-family:var(--serif); font-style:italic; font-size:24px; color:var(--ink-dim); }
 
   /* LIVE EMOJI RAIN (TV) */
-  .emoji-rain{ position:absolute; inset:0; pointer-events:none; z-index:40; overflow:hidden; }
+  .emoji-rain{ position:absolute; inset:0; pointer-events:none; z-index:9000; overflow:hidden; }
   .emoji-pop{
     position:absolute; bottom:-60px; font-size:42px; opacity:0;
     animation: emoji-float 3.5s cubic-bezier(0.2,0.6,0.3,1) forwards;
@@ -1089,20 +1084,10 @@
       <div class="wishes-wrap" id="wishes-wrap"></div>
     </div>
 
-    <!-- MEGA MONTAGE — the photo/video story (354 items) -->
+    <!-- MEGA MONTAGE — living collage of every photo/video -->
     <div id="scene-mega_montage" class="scene">
       <div class="montage">
-        <div class="montage-stage" id="montage-stage">
-          <div class="montage-layer" id="m-layer-a"></div>
-          <div class="montage-layer" id="m-layer-b"></div>
-          <video class="montage-video" id="m-video" muted playsinline></video>
-        </div>
-        <div class="montage-overlay">
-          <div class="m-act-mark" id="m-act-mark"></div>
-          <div class="m-act-title" id="m-act-title"></div>
-        </div>
-        <div class="montage-progress"><div class="bar" id="m-progress-bar"></div></div>
-        <div class="montage-counter" id="m-counter">0 / 0</div>
+        <div class="collage" id="collage"></div>
       </div>
     </div>
 
@@ -1141,7 +1126,7 @@
     </div>
   </div>
 
-  <button class="audio-toggle hidden" id="audio-toggle">♪ MUSIC: ON</button>
+  <button class="audio-toggle" id="audio-toggle">♪ nature</button>
 
   <div class="host-controls">
     <button class="b" id="host-back">← BACK</button>
@@ -1163,6 +1148,15 @@
     <button class="react-btn" data-emoji="🎉">🎉</button>
     <button class="react-btn" data-emoji="🌸">🌸</button>
     <button class="react-btn" data-emoji="🥳">🥳</button>
+    <button class="react-btn" data-emoji="😍">😍</button>
+    <button class="react-btn" data-emoji="👏">👏</button>
+    <button class="react-btn" data-emoji="🔥">🔥</button>
+    <button class="react-btn" data-emoji="🥹">🥹</button>
+    <button class="react-btn" data-emoji="✨">✨</button>
+  </div>
+  <div class="react-text-row" id="react-text-row" style="display:none;">
+    <input class="react-text" id="react-text" maxlength="40" placeholder="say something…" autocomplete="off" />
+    <button class="react-text-send" id="react-text-send">FLY ✦</button>
   </div>
   <div class="phone-status" id="phone-status">— connecting</div>
 </div>
@@ -1401,6 +1395,9 @@ function showScene(id){
   const el = document.getElementById("scene-"+id);
   if (el) el.classList.add("active");
   const pill = $("#phase-pill"); if (pill) pill.textContent = id.toUpperCase();
+  // score the montage finale with Guzarish; release the lock elsewhere
+  if (id === "mega_montage"){ if (typeof cueTrack === "function") cueTrack("media/music/guzarish.mp3"); }
+  else { if (typeof releaseCue === "function") releaseCue(); }
 }
 function toast(msg){ const t=$("#toast"); if(!t) return; t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
 function tickClock(){ const n=new Date(); const c=$("#clock"); if(!c) return; const h=n.getHours()%12||12; const m=String(n.getMinutes()).padStart(2,"0"); const ampm=n.getHours()>=12?"pm":"am"; c.textContent = `${h}:${m} ${ampm}`; }
@@ -1415,8 +1412,8 @@ function clearSlideshows(){ slideshowIntervals.forEach(i => clearInterval(i)); s
 function spawnPetals(){
   const wrap = $("#petals");
   if (!wrap) return;
-  const colors = ["gold", "gold", "sage", "coral", "gold"]; // weight toward gold
-  for (let i=0; i<28; i++){
+  const colors = ["sage", "coral", "sage", "gold", "coral"]; // mostly soft, little gold
+  for (let i=0; i<10; i++){
     const p = document.createElement("div");
     p.className = "petal " + colors[i % colors.length];
     p.style.left = (Math.random()*100) + "%";
@@ -1428,53 +1425,125 @@ function spawnPetals(){
   }
 }
 
-// ====================== AUDIO (warm pad) ======================
+// ====================== AUDIO (filmic score) ======================
+// Two layers, like a film:
+//  - a nature ambient BED that loops underneath the whole night
+//  - SONGS that come in as ~2-min scored moments, fading in over the bed
+//    (the bed ducks while a song plays, then rises back when it ends).
+//  Guzarish locks for the montage finale (no 2-min cap there).
+
+const NATURE_SRC = "media/music/nature.m4a";
+const MUSIC_TRACKS = [
+  { src: "media/music/aye-meri-zohrajabeen.mp3", title: "Aye Meri Zohrajabeen" },
+  { src: "media/music/guzarish.mp3",            title: "Guzarish" }
+];
+const CLIP_SECONDS = 125;     // ~2 min of each song, then breathe
+const SONG_GAP_MS  = 14000;   // pure-nature gap between songs
+const NATURE_FULL  = 0.34;    // bed level with no song
+const NATURE_DUCK  = 0.08;    // bed level under a song
+const SONG_LEVEL   = 0.62;    // song level once faded in
+const FADE_MS      = 2600;
+
+let natureEl = null, musicEl = null, musicIdx = 0;
+let clipTimer = null, gapTimer = null, songLocked = false;
+
+function fadeAudio(el, to, ms, done){
+  if (!el) return;
+  const from = el.volume, t0 = Date.now();
+  if (el._fadeRAF) cancelAnimationFrame(el._fadeRAF);
+  (function step(){
+    const k = ms <= 0 ? 1 : Math.min(1, (Date.now()-t0)/ms);
+    el.volume = Math.max(0, Math.min(1, from + (to-from)*k));
+    if (k < 1){ el._fadeRAF = requestAnimationFrame(step); }
+    else if (done) done();
+  })();
+}
+function ensureNature(){
+  if (natureEl) return natureEl;
+  natureEl = new Audio(NATURE_SRC);
+  natureEl.loop = true; natureEl.preload = "auto"; natureEl.volume = 0;
+  natureEl.addEventListener("error", ()=> console.warn("nature load failed"));
+  return natureEl;
+}
+function ensureMusic(){
+  if (musicEl) return musicEl;
+  musicEl = new Audio();
+  musicEl.preload = "auto"; musicEl.volume = 0;
+  musicEl.addEventListener("ended", ()=> endSong(false));
+  musicEl.addEventListener("error", ()=> console.warn("song load failed:", MUSIC_TRACKS[musicIdx] && MUSIC_TRACKS[musicIdx].src));
+  return musicEl;
+}
+function setNowPlaying(label){ const b = $("#audio-toggle"); if (b && audioOn) b.textContent = "♪ " + label; }
 
 function initAudio(){
-  if (audioCtx) return;
-  try{
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    musicGain = audioCtx.createGain();
-    musicGain.gain.value = 0.07;
-    musicGain.connect(audioCtx.destination);
-    startAmbient();
-  } catch(e){ console.warn("audio fail", e); }
+  if (!audioCtx){
+    try{
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      musicGain = audioCtx.createGain();
+      musicGain.gain.value = 0.07;
+      musicGain.connect(audioCtx.destination);
+    } catch(e){ console.warn("audio fail", e); }
+  }
+  startAmbient();
 }
 function startAmbient(){
-  if (!audioCtx || !audioOn) return;
-  stopAmbient();
-  // warmer key — D major lower octave + warm harmonics
-  const freqs = [73.42, 110, 146.83, 220, 277.18]; // D2, A2, D3, A3, C#4
-  const lp = audioCtx.createBiquadFilter();
-  lp.type = "lowpass"; lp.frequency.value = 1300; lp.Q.value = 0.5;
-  lp.connect(musicGain);
-  freqs.forEach((f, i)=>{
-    const o = audioCtx.createOscillator();
-    o.type = i % 2 === 0 ? "sine" : "triangle";
-    o.frequency.value = f * (1 + (Math.random()-.5)*0.003);
-    const g = audioCtx.createGain();
-    g.gain.value = 0;
-    o.connect(g).connect(lp);
-    o.start();
-    const peak = 0.36 - i*0.04;
-    const t0 = audioCtx.currentTime + i * 1.6;
-    g.gain.linearRampToValueAtTime(peak, t0 + 4);
-    musicNodes.push({osc:o, gain:g});
-    const lfo = audioCtx.createOscillator();
-    lfo.frequency.value = 0.03 + i*0.007;
-    const lfoGain = audioCtx.createGain();
-    lfoGain.gain.value = peak * 0.4;
-    lfo.connect(lfoGain).connect(g.gain);
-    lfo.start();
-    musicNodes.push({osc:lfo, gain:lfoGain});
-  });
-  // gentle wood-knock / wind chime triggers
-  const pulser = setInterval(()=>{ if (!audioCtx || !audioOn) return; sfxChime(); }, 7000);
-  musicNodes.push({interval: pulser});
+  if (!audioOn) return;
+  const n = ensureNature();
+  const p = n.play(); if (p && p.catch) p.catch(()=>{});
+  fadeAudio(n, songLocked ? NATURE_DUCK : NATURE_FULL, FADE_MS);
+  setNowPlaying("nature");
+  if (!songLocked && !clipTimer && !gapTimer) scheduleNextSong(6000);
 }
 function stopAmbient(){
-  musicNodes.forEach(n => { try{ if (n.osc) n.osc.stop(); if (n.interval) clearInterval(n.interval); } catch(e){} });
-  musicNodes = [];
+  clearTimeout(clipTimer); clearTimeout(gapTimer); clipTimer = gapTimer = null;
+  if (musicEl) fadeAudio(musicEl, 0, 600, ()=> musicEl.pause());
+  if (natureEl) fadeAudio(natureEl, 0, 600, ()=> natureEl.pause());
+}
+function scheduleNextSong(delay){
+  clearTimeout(gapTimer);
+  gapTimer = setTimeout(()=> playSong(musicIdx, false), delay);
+}
+function playSong(idx, immediate){
+  if (!audioOn) return;
+  clearTimeout(clipTimer); clearTimeout(gapTimer); clipTimer = gapTimer = null;
+  const t = MUSIC_TRACKS[idx]; if (!t) return;
+  musicIdx = idx;
+  const m = ensureMusic();
+  m.src = t.src; m.currentTime = 0; m.volume = 0;
+  const p = m.play(); if (p && p.catch) p.catch(()=>{});
+  fadeAudio(m, SONG_LEVEL, immediate ? 800 : FADE_MS);
+  if (natureEl) fadeAudio(natureEl, NATURE_DUCK, FADE_MS);
+  setNowPlaying(t.title);
+  if (!songLocked) clipTimer = setTimeout(()=> endSong(true), CLIP_SECONDS * 1000);
+}
+function endSong(fade){
+  clearTimeout(clipTimer); clipTimer = null;
+  if (songLocked) return; // montage keeps its song to the end
+  if (musicEl) fadeAudio(musicEl, 0, fade ? FADE_MS : 200, ()=> musicEl && musicEl.pause());
+  if (natureEl && audioOn) fadeAudio(natureEl, NATURE_FULL, FADE_MS);
+  setNowPlaying("nature");
+  musicIdx = (musicIdx + 1) % MUSIC_TRACKS.length;
+  scheduleNextSong(SONG_GAP_MS);
+}
+// lock a song for a whole scene (montage finale) — no 2-min cap
+function cueTrack(src){
+  const idx = MUSIC_TRACKS.findIndex(t => t.src === src); if (idx < 0) return;
+  songLocked = true; musicIdx = idx;
+  clearTimeout(clipTimer); clearTimeout(gapTimer); clipTimer = gapTimer = null;
+  if (!audioOn) return;
+  ensureNature();
+  const m = ensureMusic();
+  m.src = MUSIC_TRACKS[idx].src; m.currentTime = 0; m.volume = 0; m.loop = false;
+  const p = m.play(); if (p && p.catch) p.catch(()=>{});
+  fadeAudio(m, SONG_LEVEL + 0.12, FADE_MS); // a touch louder for the finale
+  if (natureEl) fadeAudio(natureEl, NATURE_DUCK, FADE_MS);
+  setNowPlaying(MUSIC_TRACKS[idx].title);
+}
+// leave the scene lock, return to rotating bed
+function releaseCue(){
+  if (!songLocked) return;
+  songLocked = false;
+  if (audioOn) endSong(true);
 }
 function sfxChime(){
   if (!audioCtx) return;
@@ -1554,8 +1623,8 @@ function sfxReveal(){
 function toggleAudio(){
   audioOn = !audioOn;
   const btn = $("#audio-toggle");
-  if (btn) btn.textContent = "♪ MUSIC: " + (audioOn ? "ON" : "OFF");
-  if (audioOn) startAmbient(); else stopAmbient();
+  if (audioOn){ startAmbient(); }
+  else { stopAmbient(); if (btn) btn.textContent = "♪ MUSIC: OFF"; }
 }
 
 // ====================== ENTRY ======================
@@ -1615,7 +1684,7 @@ function startHost(){
       // Don't replay old reactions on initial subscribe
       const ts = parseInt(k.split("_")[0], 10);
       if (Date.now() - ts > 8000) return;
-      floatEmoji(v.emoji, v.name);
+      floatEmoji(v);
     });
   });
 
@@ -1636,8 +1705,25 @@ function startHost(){
   }, 12000);
 }
 const seenReactions = new Set();
-function floatEmoji(emoji, name){
+function floatEmoji(v, nameArg){
   const rain = $("#emoji-rain"); if (!rain) return;
+  // accept either (obj) or legacy (emoji, name)
+  const obj = (v && typeof v === "object") ? v : { emoji: v, name: nameArg };
+  const name = obj.name || "";
+  // custom text reaction — flies up in a named bubble
+  if (obj.text){
+    const el = document.createElement("div");
+    el.className = "react-bubble";
+    el.style.left = (8 + Math.random()*64) + "%";
+    el.style.setProperty("--fx", ((Math.random()*2-1)*90) + "px");
+    el.style.animation = "react-fly 5.6s ease-out forwards";
+    el.innerHTML = escapeHTML(obj.text) + (name ? `<span class="who">— ${escapeHTML(name)}</span>` : "");
+    rain.appendChild(el);
+    setTimeout(()=> el.remove(), 5800);
+    return;
+  }
+  const emoji = obj.emoji;
+  if (!emoji) return;
   const el = document.createElement("div");
   el.className = "emoji-pop";
   el.textContent = emoji;
@@ -2097,91 +2183,82 @@ let montageState = {
   videoEndedFn: null,
 };
 
+// Living collage — media drifts in, overlaps, builds up, fades. Not a slideshow.
+let collageState = { items: [], idx: 0, timer: null, cards: [], z: 10 };
+
 function phaseMegaMontage(){
   showScene("mega_montage");
-  $("#footer-left").textContent = "the story · all of it";
-  $("#m-act-mark").classList.remove("show");
-  $("#m-act-title").classList.remove("show");
-  // reset
-  montageState.index = 0;
-  montageState.layerToggle = false;
-  if (montageState.itemTimer){ clearTimeout(montageState.itemTimer); }
-  const vid = $("#m-video"); vid.pause(); vid.classList.remove("active"); vid.removeAttribute("src");
+  const fl = $("#footer-left"); if (fl) fl.textContent = "";
+  // no countdown ring on the montage — it loops until host hits NEXT
+  if (collageState.timer){ clearTimeout(collageState.timer); collageState.timer = null; }
+  const collage = $("#collage"); if (collage) collage.innerHTML = "";
+  collageState.cards = []; collageState.z = 10; collageState.idx = 0;
   if (MONTAGE_SEQUENCE.length === 0){
-    // Manifest not loaded yet — try again shortly
-    setTimeout(()=> phaseMegaMontage(), 800);
+    setTimeout(()=> phaseMegaMontage(), 800); // manifest not loaded yet
     return;
   }
-  playNextMontageItem();
-  // safety advance after very long max
-  armTimer(900000, ()=> setState({phase:"resolve"})); // 15min max
+  // flat media (drop act markers), freshly shuffled so it differs each run
+  collageState.items = shuffle(MONTAGE_SEQUENCE.filter(x => x.type !== "act"));
+  spawnCollageCard();
 }
 
-function playNextMontageItem(){
+function spawnCollageCard(){
   if (!currentState || currentState.phase !== "mega_montage") return;
-  if (montageState.index >= MONTAGE_SEQUENCE.length){
-    // done — advance to resolve
-    setState({phase:"resolve"});
-    return;
-  }
-  const item = MONTAGE_SEQUENCE[montageState.index++];
-  // update counter + progress
-  const total = MONTAGE_SEQUENCE.filter(x => x.type !== "act").length;
-  const shown = MONTAGE_SEQUENCE.slice(0, montageState.index).filter(x => x.type !== "act").length;
-  $("#m-counter").textContent = shown + " / " + total;
-  $("#m-progress-bar").style.width = (100 * shown / total) + "%";
+  const collage = $("#collage"); if (!collage) return;
+  const list = collageState.items;
+  if (collageState.idx >= list.length){ collageState.items = shuffle(list); collageState.idx = 0; }
+  const item = list[collageState.idx++];
+  const isVid = item.type === "video";
+  const n = collageState.idx;
+  const hero = (n % 9 === 0); // occasional big centerpiece
+  const vw = window.innerWidth, vh = window.innerHeight;
 
-  if (item.type === "act"){
-    // Update act overlay
-    const act = MONTAGE_ACTS[item.act];
-    const mark = $("#m-act-mark");
-    const title = $("#m-act-title");
-    mark.classList.remove("show"); title.classList.remove("show");
-    setTimeout(()=>{
-      mark.textContent = act.mark;
-      title.innerHTML = act.title;
-      mark.classList.add("show");
-      title.classList.add("show");
-      setTimeout(()=>{
-        mark.classList.remove("show");
-        title.classList.remove("show");
-      }, ACT_TITLE_HOLD);
-    }, 300);
-    // proceed immediately to next item
-    montageState.itemTimer = setTimeout(playNextMontageItem, 100);
-    return;
+  const w = isVid ? (hero ? vw*0.5 : vw*0.34)
+                  : (hero ? vw*0.42 : vw*(0.17 + Math.random()*0.15));
+  const h = w * (0.64 + Math.random()*0.5);
+  const maxL = Math.max(10, vw - w - 10), maxT = Math.max(10, vh - h - 10);
+  const left = hero ? (vw - w)/2 + (Math.random()-.5)*vw*0.08 : 10 + Math.random()*(maxL-10);
+  const top  = hero ? (vh - h)/2 + (Math.random()-.5)*vh*0.08 : 10 + Math.random()*(maxT-10);
+  const rot = (Math.random()*2 - 1) * (hero ? 2 : 7);
+
+  const card = document.createElement("div");
+  card.className = "col-card";
+  card.style.left = left + "px"; card.style.top = top + "px";
+  card.style.width = w + "px";  card.style.height = h + "px";
+  card.style.zIndex = 10 + (collageState.z++ % 20); // stay under reactions (z 9000)
+  const tx = (Math.random()*2 - 1) * 70, ty = 40 + Math.random()*45;
+  card.style.transform = `translate(${tx}px,${ty}px) scale(.82) rotate(${rot}deg)`;
+
+  let media;
+  if (isVid){
+    media = document.createElement("video");
+    media.src = item.src; media.muted = true; media.loop = true; media.autoplay = true;
+    media.playsInline = true; media.setAttribute("playsinline", "");
+    media.play().catch(()=>{});
+  } else {
+    media = document.createElement("img"); media.src = item.src; media.alt = "";
   }
-  if (item.type === "img"){
-    // Cross-fade between layer A and B
-    const aId = montageState.layerToggle ? "#m-layer-a" : "#m-layer-b";
-    const bId = montageState.layerToggle ? "#m-layer-b" : "#m-layer-a";
-    const incoming = $(aId); const outgoing = $(bId);
-    incoming.style.backgroundImage = `url('${item.src}')`;
-    incoming.style.animation = "none"; void incoming.offsetWidth; incoming.style.animation = "";
-    incoming.classList.add("active");
-    outgoing.classList.remove("active");
-    montageState.layerToggle = !montageState.layerToggle;
-    // Hide video if it was showing
-    const vid = $("#m-video"); vid.pause(); vid.classList.remove("active");
-    montageState.itemTimer = setTimeout(playNextMontageItem, PHOTO_DURATION);
-    return;
-  }
-  if (item.type === "video"){
-    const vid = $("#m-video");
-    // remove previous ended listener
-    if (montageState.videoEndedFn){ vid.removeEventListener("ended", montageState.videoEndedFn); }
-    vid.src = item.src;
-    vid.classList.add("active");
-    vid.play().catch(()=>{});
-    montageState.videoEndedFn = () => playNextMontageItem();
-    vid.addEventListener("ended", montageState.videoEndedFn, { once: true });
-    // safety timeout — if video doesn't end in 25s, move on
-    montageState.itemTimer = setTimeout(()=>{
-      vid.removeEventListener("ended", montageState.videoEndedFn);
-      playNextMontageItem();
-    }, 25000);
-    return;
-  }
+  card.appendChild(media);
+  collage.appendChild(card);
+  requestAnimationFrame(()=> requestAnimationFrame(()=>{
+    card.classList.add("show");
+    card.style.transform = `translate(0,0) scale(1) rotate(${rot}deg)`;
+  }));
+
+  collageState.cards.push(card);
+  const MAX = 9;
+  while (collageState.cards.length > MAX){ fadeCollageCard(collageState.cards.shift()); }
+
+  const gap = isVid ? 2600 : (hero ? 2300 : 1250);
+  collageState.timer = setTimeout(spawnCollageCard, gap);
+}
+
+function fadeCollageCard(card){
+  if (!card) return;
+  card.classList.remove("show");
+  card.style.opacity = "0";
+  card.style.transform = card.style.transform.replace(/scale\([^)]*\)/, "scale(1.07)");
+  setTimeout(()=>{ const v = card.querySelector("video"); if (v) v.pause(); card.remove(); }, 1300);
 }
 function phaseCredits(){
   showScene("credits");
@@ -2354,6 +2431,18 @@ function mountPhone(){
     btn.style.background = "var(--gold)";
     setTimeout(()=>{ btn.style.background = ""; }, 250);
   });
+  // custom text reaction — type something and it flies onto the TV
+  const tRow = $("#react-text-row"); if (tRow) tRow.style.display = "flex";
+  const tInput = $("#react-text"), tSend = $("#react-text-send");
+  const fireText = ()=>{
+    const t = (tInput && tInput.value || "").trim(); if (!t) return;
+    const k = `${Date.now()}_${myId}`;
+    set(r(`reactions/${k}`), { text: t.slice(0,40), name: myName });
+    tInput.value = "";
+    toast("sent ✦");
+  };
+  if (tSend) tSend.addEventListener("click", fireText);
+  if (tInput) tInput.addEventListener("keydown", e=>{ if (e.key === "Enter"){ e.preventDefault(); fireText(); } });
 }
 let lastPhoneKey = "";
 function phoneKey(){ const s = currentState||{}; return `${s.phase||"-"}`; }
